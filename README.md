@@ -1,1 +1,179 @@
-# sevgilimm
+# sevgilimm<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sürpriz!</title>
+    <style>
+        /* GENEL AYARLAR */
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #E0BBE4; /* Açık Mor */
+            background-image: linear-gradient(135deg, #E0BBE4 0%, #957DAD 100%);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        /* ORTA KUTU */
+        .container {
+            background-color: white;
+            width: 90%;
+            max-width: 600px;
+            padding: 40px;
+            border-radius: 20px;
+            text-align: center;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+            border: 4px solid #fff;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .container:active {
+            transform: scale(0.98);
+        }
+
+        /* 1. AŞAMA: KEDİ EMOJİSİ */
+        #stage1 {
+            display: block;
+        }
+
+        .emoji-big {
+            font-size: 100px;
+            margin-bottom: 20px;
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+
+        .hint {
+            color: #880e4f;
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        /* 2. AŞAMA: NOT */
+        #stage2 {
+            display: none;
+        }
+        
+        .note-text {
+            font-size: 24px;
+            color: #d81b60;
+            line-height: 1.5;
+            font-style: italic;
+        }
+
+        /* 3. AŞAMA: ALBÜM */
+        #stage3 {
+            display: none;
+        }
+
+        .gallery {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+            max-height: 350px; /* Kaydırma alanı */
+            overflow-y: auto;
+            padding: 10px;
+        }
+
+        .photo-box {
+            width: 100px;
+            height: 100px;
+            object-fit: cover;
+            border-radius: 10px;
+            border: 2px solid #ddd;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        /* MÜZİK KUTUSU (GİZLİ) */
+        #music-box { display: none; }
+
+    </style>
+</head>
+<body>
+
+    <div class="container" onclick="nextStep()">
+        
+        <div id="stage1">
+            <div class="emoji-big">😻💐</div>
+            <p class="hint">Sana bir sürprizim var!<br>Kutuya tıkla bakalım... 🐾</p>
+        </div>
+
+        <div id="stage2">
+            <div class="emoji-big">💌</div>
+            <p class="note-text">
+                "Seni 14 Şubat'ta değil, yaşadığım müddetçe her gün seveceğim çatlak fıstığımmm!" ❤️
+            </p>
+            <p style="font-size: 12px; color: #aaa;">(Devam etmek için tekrar tıkla)</p>
+        </div>
+
+        <div id="stage3">
+            <h2 style="color: #6a1b9a;">Bizim Hikayemiz</h2>
+            <div class="gallery" id="photo-area">
+                </div>
+        </div>
+
+    </div>
+
+    <div id="music-box"></div>
+
+    <script>
+        let step = 1;
+
+        function nextStep() {
+            if (step === 1) {
+                // 1 -> 2
+                document.getElementById('stage1').style.display = 'none';
+                document.getElementById('stage2').style.display = 'block';
+                
+                // Müzik Başlat (Tuğkan - Sen Benim)
+                document.getElementById('music-box').innerHTML = '<iframe width="1" height="1" src="https://www.youtube.com/embed/g7KECjX1WcI?autoplay=1&loop=1" frameborder="0" allow="autoplay; encrypted-media"></iframe>';
+                
+                step = 2;
+            } 
+            else if (step === 2) {
+                // 2 -> 3
+                document.getElementById('stage2').style.display = 'none';
+                document.getElementById('stage3').style.display = 'block';
+                
+                // Fotoğrafları Yükle
+                loadPhotos();
+                
+                step = 3;
+                document.querySelector('.container').onclick = null;
+                document.querySelector('.container').style.cursor = 'default';
+            }
+        }
+
+        function loadPhotos() {
+            const area = document.getElementById('photo-area');
+            
+            // 1'den 9'a kadar döngü kurduk
+            for(let i=1; i<=9; i++) {
+                let img = document.createElement('img');
+                img.className = 'photo-box';
+                
+                // ARTIK DOSYA YOLU: foto/1.jpg, foto/2.jpg şeklinde
+                img.src = 'foto/' + i + '.jpg'; 
+                
+                // Resim yüklenemezse gizle
+                img.onerror = function() {
+                    this.style.display = 'none';
+                };
+                
+                area.appendChild(img);
+            }
+        }
+    </script>
+</body>
+</html>
